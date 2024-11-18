@@ -20,7 +20,9 @@ if (ANDROID)
 	set(EXECUTABLE_NAME main)
 	add_library(${EXECUTABLE_NAME} SHARED)
 else()
-	add_executable(${EXECUTABLE_NAME})
+	add_executable(${EXECUTABLE_NAME}
+			src/main.cpp
+			src/main.cpp)
 endif()
 
 # Add your sources to the target
@@ -59,20 +61,20 @@ target_link_libraries(${EXECUTABLE_NAME} PUBLIC SDL3::SDL3)
 target_compile_definitions(${EXECUTABLE_NAME} PUBLIC SDL_MAIN_USE_CALLBACKS)
 
 # set some extra configs for each platform
-#set_target_properties(${EXECUTABLE_NAME} PROPERTIES 
+set_target_properties(${EXECUTABLE_NAME} PROPERTIES
     # On macOS, make a proper .app bundle instead of a bare executable
-    #MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE TRUE
     # Set the Info.plist file for Apple Mobile platforms. Without this file, your app
     # will not launch. 
     #MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/src/Info.plist.in"
 
     # in Xcode, create a Scheme in the schemes dropdown for the app.
-    #XCODE_GENERATE_SCHEME TRUE
+    XCODE_GENERATE_SCHEME TRUE
     # Identification for Xcode
-    #XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER "com.ravbug.sdl3-sample"
-	#XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.ravbug.sdl3-sample"
-	#XCODE_ATTRIBUTE_CURRENTYEAR "${CURRENTYEAR}"
-#)
+    XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER "com.ravbug.sdl3-sample"
+	XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.ravbug.sdl3-sample"
+	XCODE_ATTRIBUTE_CURRENTYEAR "${CURRENTYEAR}"
+)
 
 # on Visual Studio, set our app as the default project
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "${EXECUTABLE_NAME}")
