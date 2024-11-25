@@ -1,17 +1,22 @@
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_render.h>
-#include <SDL3/SDL_main.h>
+
+#include <SDL3/SDL_timer.h>
+
+#include "texture.h"
+#include "plane.h"
+
 #include <cmath>
-
-#include <string>
-
-#include <memory>
-
-class Texture;
+#include <queue>
+#include <mutex>
 
 const size_t WINDOW_WIDTH = 800;
 const size_t WINDOW_HEIGHT = 600;
+
 std::unique_ptr<Texture> bg_texture_;
+std::shared_ptr<Texture> plane_texture_;
+
+std::mutex mutex_;
+std::vector<Plane> planes_list;
+std::vector<Plane> base_plane_list;
 
 struct AppContext {
     SDL_Window* window;
@@ -19,62 +24,30 @@ struct AppContext {
     SDL_AppResult app_quit = SDL_APP_CONTINUE;
 };
 
-class Texture
+
+Uint32 timerCallback(void* userdata, unsigned int timer_id, unsigned int interval)
 {
-public:
-    Texture(SDL_Renderer* renderer, const std::string& filepath, float width, float height) 
-     :texture_(nullptr), texture_width_(0), texture_height_(0)
     {
-        SDL_Log("Loading texture: %s", filepath.c_str());
+    std::lock_guard<std::mutex> lock(mutex_);
+    planes_list.clear();
+    std::vector<std::vector<Plane>::iterator> to_erase;
 
-        SDL_Surface *surface = NULL;
-        char *bmp_path = NULL;
-        /* Textures are pixel data that we upload to the video hardware for fast drawing. Lots of 2D
-        engines refer to these as "sprites." We'll do a static texture (upload once, draw many
-        times) with data from a bitmap file. */
+        for(auto plane = base_plane_list.begin(); plane != base_plane_list.end(); plane++)
+        {
+            plane->update();
+            
+            if(plane->get_counter() > 0)
+                planes_list.push_back(*plane);
+            else
+                to_erase.push_back(plane);
+        }
 
-        /* SDL_Surface is pixel data the CPU can access. SDL_Texture is pixel data the GPU can access.
-        Load a .bmp into a surface, move it to a texture from there. */
-        SDL_asprintf(&bmp_path, filepath.c_str(), SDL_GetBasePath());  /* allocate a string of the full file path */
-        surface = SDL_LoadBMP(filepath.c_str());
-        if (!surface)
-            SDL_Log("Couldn't load bitmap: %s", SDL_GetError());
+        for(auto& idx : to_erase)
+            base_plane_list.erase(idx);
+    }
     
-
-        SDL_free(bmp_path);  /* done with this, the file is loaded. */
-
-        texture_width_ = surface->w;
-        texture_height_ = surface->h;
-
-        texture_ = SDL_CreateTextureFromSurface(renderer, surface);
-        if (!texture_)
-            SDL_Log("Couldn't create static texture: %s", SDL_GetError());
-
-        SDL_DestroySurface(surface); 
-
-        dst_rect_.x = 0.0f;
-        dst_rect_.y = 0.0f;
-        dst_rect_.w = WINDOW_WIDTH;
-        dst_rect_.h = WINDOW_HEIGHT;
-    }
-    ~Texture() 
-    {
-        SDL_DestroyTexture(texture_);
-    } 
-
-    bool DrawTexture(SDL_Renderer* renderer)
-    {
-        return SDL_RenderTexture(renderer, texture_, NULL, &dst_rect_);
-    }
-
-private:
-    SDL_Texture *texture_;
-    float texture_width_;
-    float texture_height_;
-
-    SDL_FRect dst_rect_;
-};
-
+    return interval;
+}
 
 SDL_AppResult SDL_Fail(){
     SDL_LogError(SDL_LOG_CATEGORY_CUSTOM, "Error %s", SDL_GetError());
@@ -121,9 +94,29 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 
     //load textures here
     bg_texture_ = std::make_unique<Texture>(renderer, "cs_bg.bmp", WINDOW_WIDTH, WINDOW_HEIGHT);
+    plane_texture_ = std::make_shared<Texture>(renderer, "plane1.bmp", 40, 40);
 
 
     //==================//
+
+
+    //tmp data
+
+    base_plane_list.push_back(Plane(0, 0.3f, 0.3f, plane_texture_));
+    base_plane_list.push_back(Plane(1, 6.0f, 300.0f, plane_texture_));
+    base_plane_list.push_back(Plane(2, 20.0f, 60.0f, plane_texture_));
+    base_plane_list.push_back(Plane(3, 40.0f, 100.0f, plane_texture_));
+    
+    planes_list.push_back(Plane(0, 0.3f, 0.3f, plane_texture_));
+    planes_list.push_back(Plane(1, 6.0f, 300.0f, plane_texture_));
+    planes_list.push_back(Plane(2, 20.0f, 60.0f, plane_texture_));
+    planes_list.push_back(Plane(3, 40.0f, 100.0f, plane_texture_));
+
+    //==============
+
+    //update callback
+    SDL_AddTimer(1000, timerCallback, (void*)0);
+    //===============
 
     return SDL_APP_CONTINUE;
 }
@@ -146,6 +139,16 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
     bg_texture_->DrawTexture(app->renderer);
 
+
+    //rysuj samoloty
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        for(auto& plane : planes_list)
+        {
+            //mutex_.lock();
+            plane.draw(app->renderer);
+        }
+    }
     SDL_RenderPresent(app->renderer);
 
     return app->app_quit;
