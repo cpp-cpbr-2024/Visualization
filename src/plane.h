@@ -42,6 +42,5 @@ private:
 
     //counter jest w sekundach
     size_t counter_;
-
     std::shared_ptr<Texture> plane_texture_;
 };

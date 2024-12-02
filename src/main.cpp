@@ -15,7 +15,6 @@ std::unique_ptr<Texture> bg_texture_;
 std::shared_ptr<Texture> plane_texture_;
 
 std::mutex mutex_;
-std::vector<Plane> planes_list;
 std::vector<Plane> base_plane_list;
 
 struct AppContext {
@@ -24,28 +23,35 @@ struct AppContext {
     SDL_AppResult app_quit = SDL_APP_CONTINUE;
 };
 
+void get_new_plane() {
+
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    //tmp
+
+
+    base_plane_list.push_back(Plane(0, 0.3f, 0.3f, plane_texture_));
+    base_plane_list.push_back(Plane(1, 6.0f, 300.0f, plane_texture_));
+    base_plane_list.push_back(Plane(2, 20.0f, 60.0f, plane_texture_));
+    base_plane_list.push_back(Plane(3, 40.0f, 100.0f, plane_texture_));
+}
 
 Uint32 timerCallback(void* userdata, unsigned int timer_id, unsigned int interval)
 {
+    std::vector<Plane> new_planes;
+
+    for(auto& plane : base_plane_list)
     {
-    std::lock_guard<std::mutex> lock(mutex_);
-    planes_list.clear();
-    std::vector<std::vector<Plane>::iterator> to_erase;
-
-        for(auto plane = base_plane_list.begin(); plane != base_plane_list.end(); plane++)
-        {
-            plane->update();
-            
-            if(plane->get_counter() > 0)
-                planes_list.push_back(*plane);
-            else
-                to_erase.push_back(plane);
-        }
-
-        for(auto& idx : to_erase)
-            base_plane_list.erase(idx);
+        plane.update();
+        if(plane.get_counter() > 0)
+            new_planes.push_back(plane);
     }
-    
+
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        base_plane_list = new_planes;
+    }
+
     return interval;
 }
 
@@ -104,15 +110,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 
     //tmp data
 
-    base_plane_list.push_back(Plane(0, 0.3f, 0.3f, plane_texture_));
-    base_plane_list.push_back(Plane(1, 6.0f, 300.0f, plane_texture_));
-    base_plane_list.push_back(Plane(2, 20.0f, 60.0f, plane_texture_));
-    base_plane_list.push_back(Plane(3, 40.0f, 100.0f, plane_texture_));
-    
-    planes_list.push_back(Plane(0, 0.3f, 0.3f, plane_texture_));
-    planes_list.push_back(Plane(1, 6.0f, 300.0f, plane_texture_));
-    planes_list.push_back(Plane(2, 20.0f, 60.0f, plane_texture_));
-    planes_list.push_back(Plane(3, 40.0f, 100.0f, plane_texture_));
+    get_new_plane();
 
     //==============
 
@@ -143,14 +141,9 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
 
 
     //rysuj samoloty
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-        for(auto& plane : planes_list)
-        {
-            //mutex_.lock();
-            plane.draw(app->renderer);
-        }
-    }
+    for(auto& plane : base_plane_list)
+        plane.draw(app->renderer);
+
     SDL_RenderPresent(app->renderer);
 
     return app->app_quit;
