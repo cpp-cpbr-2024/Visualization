@@ -9,7 +9,7 @@
 #include <mutex>
 
 const size_t WINDOW_WIDTH = 800;
-const size_t WINDOW_HEIGHT = 600;
+const size_t WINDOW_HEIGHT = 800;
 
 std::unique_ptr<Texture> bg_texture_;
 std::shared_ptr<Texture> plane_texture_;
@@ -30,10 +30,14 @@ void get_new_plane() {
     //tmp
 
 
-    base_plane_list.push_back(Plane(0, 0.3f, 0.3f, 5.0f, 10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(1, 6.0f, 300.0f, -5.0f, 10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(2, 20.0f, 60.0f, 5.0f, -10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(3, 40.0f, 100.0f, -5.0f, -10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(0, 0.3f, 0.0f, 5.0f, 10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(1, 6.0f, 100.0f, -5.0f, 10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(2, 20.0f, 200.0f, 5.0f, -10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(3, 40.0f, 300.0f, -5.0f, -10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(4, 7.3f, 400.0f, 5.0f, 10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(5, 76.0f, 500.0f, -5.0f, 10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(6, 90.0f, 600.0f, 5.0f, -10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(7, 140.0f, 700.0f, -5.0f, -10.0f, plane_texture_));
 }
 
 Uint32 timerCallback(void* userdata, unsigned int timer_id, unsigned int interval)
@@ -67,7 +71,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
     }
     
     // create a window
-    SDL_Window* window = SDL_CreateWindow("Window", 800, 600, 0);
+    SDL_Window* window = SDL_CreateWindow("Window", WINDOW_WIDTH, WINDOW_HEIGHT, 0);
     if (not window){
         return SDL_Fail();
     }
@@ -99,8 +103,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
     SDL_Log("Application started successfully!");
 
     //load textures here
-    bg_texture_ = std::make_unique<Texture>(renderer, "../..//data//cs_bg.bmp", WINDOW_WIDTH, WINDOW_HEIGHT);
-    plane_texture_ = std::make_shared<Texture>(renderer, "../..//data//plane1.png", 40, 40);
+    bg_texture_ = std::make_unique<Texture>(renderer, "../..//data//cs_bg.png", WINDOW_WIDTH, WINDOW_HEIGHT);
+    plane_texture_ = std::make_shared<Texture>(renderer, "../..//data//plane1.png", 20, 20);
     //bg_texture_ = std::make_unique<Texture>(renderer, "../../../../../data/cs_bg.bmp", WINDOW_WIDTH, WINDOW_HEIGHT);
     //plane_texture_ = std::make_shared<Texture>(renderer, "../../../../../data/plane1.png", 40, 40);
 
