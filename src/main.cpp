@@ -112,7 +112,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
     //load textures here
     bg_texture_ = std::make_unique<Texture>(renderer, "../..//data//cs_bg.png", WINDOW_WIDTH, WINDOW_HEIGHT);
     plane_texture_ = std::make_shared<Texture>(renderer, "../..//data//plane1.png", 20, 20);
-    //bg_texture_ = std::make_unique<Texture>(renderer, "../../../../../data/cs_bg.bmp", WINDOW_WIDTH, WINDOW_HEIGHT);
+    //bg_texture_ = std::make_unique<Texture>(renderer, "../../../../../data/cs_bg.png", WINDOW_WIDTH, WINDOW_HEIGHT);
     //plane_texture_ = std::make_shared<Texture>(renderer, "../../../../../data/plane1.png", 40, 40);
 
 
