@@ -30,10 +30,10 @@ void get_new_plane() {
     //tmp
 
 
-    base_plane_list.push_back(Plane(0, 0.3f, 0.3f, plane_texture_));
-    base_plane_list.push_back(Plane(1, 6.0f, 300.0f, plane_texture_));
-    base_plane_list.push_back(Plane(2, 20.0f, 60.0f, plane_texture_));
-    base_plane_list.push_back(Plane(3, 40.0f, 100.0f, plane_texture_));
+    base_plane_list.push_back(Plane(0, 0.3f, 0.3f, 5.0f, 10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(1, 6.0f, 300.0f, -5.0f, 10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(2, 20.0f, 60.0f, 5.0f, -10.0f, plane_texture_));
+    base_plane_list.push_back(Plane(3, 40.0f, 100.0f, -5.0f, -10.0f, plane_texture_));
 }
 
 Uint32 timerCallback(void* userdata, unsigned int timer_id, unsigned int interval)

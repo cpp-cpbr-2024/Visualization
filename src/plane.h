@@ -10,8 +10,8 @@
 class Plane
 {
 public:
-    Plane(size_t idx, float x, float y, const std::shared_ptr<Texture>& plane_texture)
-        :idx_(idx), x_(x), y_(y), counter_(10), plane_texture_(plane_texture)
+    Plane(size_t idx, float x, float y, float dx, float dy, const std::shared_ptr<Texture>& plane_texture)
+        :idx_(idx), x_(x), y_(y), dx_(dx), dy_(dy), counter_(10), plane_texture_(plane_texture)
     {
     }
 
@@ -30,7 +30,7 @@ public:
         if(counter_ < 1)
             return;
 
-        plane_texture_->DrawTexture(renderer, x_, y_);
+        plane_texture_->DrawTexture(renderer, x_, y_,dx_,dy_);
     }
 
     inline const size_t get_counter() const { return counter_; }
@@ -39,6 +39,8 @@ private:
     size_t idx_;
     float x_;
     float y_;
+    float dx_;
+    float dy_;
 
     //counter jest w sekundach
     size_t counter_;
