@@ -4,3 +4,6 @@
 [submodule "modules/comm"]
 	path = modules/comm
 	url = git@github.com:cpp-cpbr-2024/comm.git
+[submodule "SDL_image"]
+	path = SDL_image
+	url = https://github.com/libsdl-org/SDL_image.git

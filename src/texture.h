@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_main.h>
+#include <SDL3_image/SDL_image.h>
 
 #include <string>
 #include <memory>
@@ -24,7 +25,8 @@ public:
         /* SDL_Surface is pixel data the CPU can access. SDL_Texture is pixel data the GPU can access.
         Load a .bmp into a surface, move it to a texture from there. */
         SDL_asprintf(&bmp_path, filepath.c_str(), SDL_GetBasePath());  /* allocate a string of the full file path */
-        surface = SDL_LoadBMP(filepath.c_str());
+       // surface = SDL_LoadBMP(filepath.c_str());
+       surface = IMG_Load(filepath.c_str());
         if (!surface)
             SDL_Log("Couldn't load bitmap: %s", SDL_GetError());
     
