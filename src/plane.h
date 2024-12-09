@@ -1,6 +1,7 @@
 #pragma once
 
 #include "texture.h"
+#include "math.h"
 #include <chrono>
 
 //TODO: Załaduj texture.
@@ -11,7 +12,7 @@ class Plane
 {
 public:
     Plane(size_t idx, float x, float y, float dx, float dy, const std::shared_ptr<Texture>& plane_texture)
-        :idx_(idx), x_(x), y_(y), dx_(dx), dy_(dy), counter_(10), plane_texture_(plane_texture)
+        :idx_(idx), x_(x), y_(y), dx_(dx), dy_(dy), counter_(100), plane_texture_(plane_texture)
     {
     }
 
@@ -22,15 +23,16 @@ public:
     {
         counter_--;
         x_ += 10;
-        SDL_Log("Plane: idx: %d pos: (%.2f, %2.f) counter: %d", idx_, x_, y_, counter_);
+        SDL_Log("Plane: idx: %d pos: (%.2f, %2.f) vel: (%.2f, %2.f) counter: %d", idx_, x_, y_, dx_, dy_, counter_);
     }
 
     void draw(SDL_Renderer* renderer)
     {
         if(counter_ < 1)
             return;
-
-        plane_texture_->DrawTexture(renderer, x_, y_,dx_,dy_);
+        int ang = round(atan2(dy_,dx_)*180/M_PI);
+        ang = counter_*180/M_PI/20;
+        plane_texture_->DrawTexture(renderer, x_, y_,ang);
     }
 
     inline const size_t get_counter() const { return counter_; }

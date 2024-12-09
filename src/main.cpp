@@ -115,7 +115,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
     //==============
 
     //update callback
-    SDL_AddTimer(1000, timerCallback, (void*)0);
+    SDL_AddTimer(100, timerCallback, (void*)0);
     //===============
 
     return SDL_APP_CONTINUE;

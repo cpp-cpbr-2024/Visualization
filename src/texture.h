@@ -4,7 +4,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3_image/SDL_image.h>
-#include "math.h"
+
 #include <string>
 #include <memory>
 
@@ -57,11 +57,11 @@ public:
 
     // x ,y pozycja
     // dx, dy prędkość - obliczamy ang kąt obrotu 
-    bool DrawTexture(SDL_Renderer* renderer, float x, float y, float dx, float dy)
+    bool DrawTexture(SDL_Renderer* renderer, float x, float y, float ang)
     {
         dst_rect_.x = x;
         dst_rect_.y = y;
-        int ang = round(atan2(dy,dx)*180/M_PI);
+    
         return SDL_RenderTextureRotated(renderer, texture_, NULL, &dst_rect_,
                          ang, NULL,  SDL_FLIP_NONE);
        // return SDL_RenderTexture(renderer, texture_, NULL, &dst_rect_);
