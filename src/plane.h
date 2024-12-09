@@ -12,7 +12,7 @@ class Plane
 {
 public:
     Plane(size_t idx, float x, float y, float dx, float dy, const std::shared_ptr<Texture>& plane_texture)
-        :idx_(idx), x_(x), y_(y), dx_(dx), dy_(dy), counter_(100), plane_texture_(plane_texture)
+        :idx_(idx), x_(x), y_(y), dx_(dx), dy_(dy), counter_(25), plane_texture_(plane_texture)
     {
     }
 
@@ -22,7 +22,7 @@ public:
     void update()
     {
         counter_--;
-        x_ += 10;
+        //x_ += 10;
         SDL_Log("Plane: idx: %d pos: (%.2f, %2.f) vel: (%.2f, %2.f) counter: %d", idx_, x_, y_, dx_, dy_, counter_);
     }
 
@@ -31,7 +31,7 @@ public:
         if(counter_ < 1)
             return;
         int ang = round(atan2(dy_,dx_)*180/M_PI);
-        ang = counter_*180/M_PI/20;
+        ang = counter_*180/M_PI/10;
         plane_texture_->DrawTexture(renderer, x_, y_,ang);
     }
 

@@ -8,6 +8,10 @@
 #include <queue>
 #include <mutex>
 
+int x_plane_pos=0;
+int y_plane_pos=0;
+int id_plane = 0;
+
 const size_t WINDOW_WIDTH = 800;
 const size_t WINDOW_HEIGHT = 800;
 
@@ -28,22 +32,25 @@ void get_new_plane() {
     std::lock_guard<std::mutex> lock(mutex_);
 
     //tmp
-
-
-    base_plane_list.push_back(Plane(0, 0.3f, 0.0f, 5.0f, 10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(1, 6.0f, 100.0f, -5.0f, 10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(2, 20.0f, 200.0f, 5.0f, -10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(3, 40.0f, 300.0f, -5.0f, -10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(4, 7.3f, 400.0f, 5.0f, 10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(5, 76.0f, 500.0f, -5.0f, 10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(6, 90.0f, 600.0f, 5.0f, -10.0f, plane_texture_));
-    base_plane_list.push_back(Plane(7, 140.0f, 700.0f, -5.0f, -10.0f, plane_texture_));
+    x_plane_pos = x_plane_pos + 10;
+    y_plane_pos = y_plane_pos + 10;
+    base_plane_list.push_back(Plane(id_plane, x_plane_pos, y_plane_pos, 5.0f, 10.0f, plane_texture_));
+    id_plane++;
+    base_plane_list.push_back(Plane(id_plane, x_plane_pos+100, y_plane_pos+30, 5.0f, 10.0f, plane_texture_));
+    id_plane++;
+    // base_plane_list.push_back(Plane(1, x_plane_pos+10.0f, 100.0f, -5.0f, 10.0f, plane_texture_));
+    // base_plane_list.push_back(Plane(2, x_plane_pos+20.0f, 200.0f, 5.0f, -10.0f, plane_texture_));
+    // base_plane_list.push_back(Plane(3, x_plane_pos+30.0f, 300.0f, -5.0f, -10.0f, plane_texture_));
+    // base_plane_list.push_back(Plane(4, x_plane_pos+40.0f, 400.0f, 5.0f, 10.0f, plane_texture_));
+    // base_plane_list.push_back(Plane(5, x_plane_pos+50.0f, 500.0f, -5.0f, 10.0f, plane_texture_));
+    // base_plane_list.push_back(Plane(6, x_plane_pos+60.0f, 600.0f, 5.0f, -10.0f, plane_texture_));
+    // base_plane_list.push_back(Plane(7, x_plane_pos+70.0f, 700.0f, -5.0f, -10.0f, plane_texture_));
 }
 
 Uint32 timerCallback(void* userdata, unsigned int timer_id, unsigned int interval)
 {
     std::vector<Plane> new_planes;
-
+    get_new_plane();
     for(auto& plane : base_plane_list)
     {
         plane.update();
