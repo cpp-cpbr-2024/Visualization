@@ -59,7 +59,10 @@ public:
     {
         dst_rect_.x = x;
         dst_rect_.y = y;
-        return SDL_RenderTexture(renderer, texture_, NULL, &dst_rect_);
+        return SDL_RenderTextureRotated(renderer, texture_, NULL, &dst_rect_,
+                         x, NULL,  SDL_FLIP_NONE);
+       // return SDL_RenderTexture(renderer, texture_, NULL, &dst_rect_);
+        
     }
 
 private:
