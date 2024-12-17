@@ -1,6 +1,6 @@
 
 #include <SDL3/SDL_timer.h>
-
+#include <Comm.hpp>
 #include "texture.h"
 #include "plane.h"
 
@@ -11,6 +11,9 @@
 int x_plane_pos=0;
 int y_plane_pos=0;
 int id_plane = 0;
+
+boost::asio::io_context ioContext;
+FlyingObjectSubscriber aa(ioContext);
 
 const size_t WINDOW_WIDTH = 800;
 const size_t WINDOW_HEIGHT = 800;
