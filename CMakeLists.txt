@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.16)
 
 # set the output directory for built objects.
 # This makes sure that the dynamic library goes into the build directory automatically.
-enable_language(OBJC)
+#enable_language(OBJC)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
 # prevent installing to system directories. 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE INTERNAL "")
-
+set(OVERRIDE_BOOST_PATH "C:/local/boost_1_87_0")
 # Declare the project
 project(Viscpp)
 
@@ -52,6 +52,8 @@ if(CMAKE_SYSTEM_NAME MATCHES Emscripten)
 	set(CMAKE_EXECUTABLE_SUFFIX ".html" CACHE INTERNAL "")
 endif()
 
+
+
 # Configure SDL by calling its CMake file.
 # we use EXCLUDE_FROM_ALL so that its install targets and configs don't
 # pollute upwards into our configuration.
@@ -59,14 +61,13 @@ add_subdirectory(SDL EXCLUDE_FROM_ALL)
 add_subdirectory(SDL_image EXCLUDE_FROM_ALL)
 
 add_subdirectory(modules/comm)
-find_package(Boost REQUIRED COMPONENTS filesystem system)
+#find_package(Boost REQUIRED COMPONENTS filesystem system)
 
 # add_executable(Coordinator main.cpp ${SOURCES})
 # target_link_libraries(${EXECUTABLE_NAME} PRIVATE Comm Boost::boost Boost::filesystem Boost::system)
 
-
 # Link SDL to our executable. This also makes its include directory available to us. 
-target_link_libraries(${EXECUTABLE_NAME} PUBLIC SDL3::SDL3 SDL3_image::SDL3_image Comm)
+target_link_libraries(${EXECUTABLE_NAME} PUBLIC SDL3::SDL3 SDL3_image::SDL3_image Comm ws2_32)
 target_compile_definitions(${EXECUTABLE_NAME} PUBLIC SDL_MAIN_USE_CALLBACKS)
 
 # set some extra configs for each platform
