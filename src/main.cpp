@@ -3,7 +3,7 @@
 #include <Comm.hpp>
 #include "texture.h"
 #include "plane.h"
-
+#include <cstdlib>
 #include <cmath>
 #include <queue>
 #include <mutex>
@@ -41,6 +41,22 @@ void get_new_plane() {
     id_plane++;
     base_plane_list.push_back(Plane(id_plane, x_plane_pos+100, y_plane_pos+30, 5.0f, 10.0f, plane_texture_));
     id_plane++;
+    base_plane_list.push_back(Plane(id_plane, 800-x_plane_pos, y_plane_pos+30, -5.0f, 10.0f, plane_texture_));
+    id_plane++;
+    base_plane_list.push_back(Plane(id_plane, 500-x_plane_pos, y_plane_pos+30, 5.0f, -10.0f, plane_texture_));
+    id_plane++;
+    base_plane_list.push_back(Plane(id_plane, 800-x_plane_pos, 700-y_plane_pos, 5.0f, 10.0f, plane_texture_));
+    id_plane++;
+    base_plane_list.push_back(Plane(id_plane, 500-x_plane_pos, 300-y_plane_pos, -5.0f, 10.0f, plane_texture_));
+    id_plane++;
+    base_plane_list.push_back(Plane(id_plane, 300+x_plane_pos, 700-y_plane_pos, 5.0f, -10.0f, plane_texture_));
+    id_plane++;
+    base_plane_list.push_back(Plane(id_plane, 0+x_plane_pos, 300-y_plane_pos, -5.0f, 10.0f, plane_texture_));
+    id_plane++;
+    base_plane_list.push_back(Plane(id_plane, rand() % 800, rand() % 800, -5.0f, 10.0f, plane_texture_));
+    id_plane++;
+
+
     // base_plane_list.push_back(Plane(1, x_plane_pos+10.0f, 100.0f, -5.0f, 10.0f, plane_texture_));
     // base_plane_list.push_back(Plane(2, x_plane_pos+20.0f, 200.0f, 5.0f, -10.0f, plane_texture_));
     // base_plane_list.push_back(Plane(3, x_plane_pos+30.0f, 300.0f, -5.0f, -10.0f, plane_texture_));
